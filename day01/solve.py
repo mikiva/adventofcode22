@@ -1,23 +1,5 @@
-def solver(inp, positions):
-    elves = []
-    cur = 0
+input = "../inputs/day01.txt"
 
-    for l in inp:
-        if l:
-            cur += int(l)
-        else:
-            elves.append(cur)
-            cur = 0
-    elves.sort(reverse=True)
-    top_calories = sum([c for c in elves[:positions]])
-    return top_calories
-
-
-def solve():
-    i = [line for line in open("../inputs/day01.txt", "r").read().split("\n")]
-    print(solver(i, 1))
-    print(solver(i, 3))
-
-
-if __name__ == '__main__':
-    solve()
+i = sorted([sum([int(l) for l in line.split()]) for line in open(input, "r").read().split("\n\n")], reverse=True)
+print("p1", i[0])
+print("p2", sum(i[:3]))
