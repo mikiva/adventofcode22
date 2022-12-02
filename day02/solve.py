@@ -1,20 +1,17 @@
 import os
 
-f = f"../inputs/{os.path.split(os.getcwd())[1]}_ex.txt"
+f = f"../inputs/{os.path.split(os.getcwd())[1]}.txt"
+
 
 def play(a, b) -> int:
-    b = "XYZ".index(b)
-    a = "ABC".index(a)
-    s = b + 1
-
-    outcome = (b - a) % 3
-    print(outcome)
+    a, b = "ABC".index(a), "XYZ".index(b)
+    score, outcome = b + 1, (b - a) % 3
     if outcome == 0:
-        return 3 + s
+        return 3 + score
     elif outcome == 1:
-        return 6 + s
+        return 6 + score
     else:
-        return 0 + s
+        return 0 + score
 
 
 def play_mod(a, b) -> int:
@@ -29,18 +26,14 @@ def play_mod(a, b) -> int:
 
 
 i = [g.strip() for g in open(f).readlines()]
-score = 0
-score2 = 0
+s1, s2 = 0, 0
 for game in i:
     a, b = game.split()
-    s = play(a, b)
-    score += s
+    p1 = play(a, b)
+    s1 += p1
 
-    s2 = play_mod(a, b)
-    score2 += s2
+    p2 = play_mod(a, b)
+    s2 += p2
 
-print("p1", score)
-print("p2", score2)
-#assert score == 12855
-#assert score2 == 13726
-#
+print("p1", s1)
+print("p2", s2)
