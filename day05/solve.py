@@ -9,17 +9,14 @@ stacks, instructions = [p for p in open(f).read().split("\n\n")]
 
 # BOXES
 
-def get_boxes():
-    bs = defaultdict(list)
-    boxes_p = r"(\[[A-Z]\])"
-    for i, stack in enumerate(stacks.split("\n")[:-1]):
-        inds = re.finditer(boxes_p, stack)
-        for n in inds:
-            val = n.group()
-            pos = n.start(0)
-            bs[(pos // 4) + 1].insert(0, val)
-
-    return bs
+def get_stacks():
+    crate_stacks = defaultdict(list)
+    crates_p = r"(\[[A-Z]\])"
+    for stack in stacks.split("\n")[:-1]:
+        for n in re.finditer(crates_p, stack):
+            val, pos = n.group(), n.start(0)
+            crate_stacks[(pos // 4) + 1].insert(0, val[1])
+    return crate_stacks
 
 
 # box_stacks = bs
@@ -36,8 +33,6 @@ def p1(box_stacks):
     stack_dicts = sorted(box_stacks.items())
 
     last_items = "".join([v[-1] for k, v in stack_dicts])
-    last_items = last_items.replace("[", "")
-    last_items = last_items.replace("]", "")
     return last_items
 
 
@@ -54,11 +49,9 @@ def p2(box_stacks):
     stack_dicts = sorted(box_stacks.items())
 
     last_items = "".join([v[-1] for k, v in stack_dicts])
-    last_items = last_items.replace("[", "")
-    last_items = last_items.replace("]", "")
     return last_items
 
 
-print("p1", p1(get_boxes()))
-print("p2", p2(get_boxes()))
+print("p1", p1(get_stacks()))
+print("p2", p2(get_stacks()))
 print("===")
