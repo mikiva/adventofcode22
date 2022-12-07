@@ -1,5 +1,4 @@
 import os
-import re
 import sys
 from collections import defaultdict
 
@@ -8,27 +7,21 @@ lines = open(f).read().split("\n")
 dirs = defaultdict(list)
 cwd = ""
 for line in lines:
-    l = line.split(" ")
-    if l[0] == "$":
-        cmd = l[1]
-        if cmd == "cd":
-            if re.match(r"\w", l[2]):
-                if cwd == "/":
-                    cwd = ""
-                cwd += "/" + l[2]
-            elif l[2] == "/":
-                cwd = "/"
-            else:
-                cwd = "/".join(cwd.split("/")[:-1])
+    match line.split(" "):
+        case ["$", "cd", directory] if directory.startswith("/"):
+            cwd = directory
+        case ["$", "cd", directory] if directory == "..":
+            cwd = "/".join(cwd.split("/")[:-1])
+            if len(cwd) == 0: cwd = "/"
+        case ["$", "cd", directory]:
+            cwd += directory if cwd.endswith("/") else "/" + directory
+        case [size, file_name] if size.isdigit():
+            dirs[cwd].append(int(size))
+            for k in [key for key in dirs.keys() if key != cwd and key in cwd]:
+                dirs[k].append(int(size))
 
-            if cwd not in dirs.keys():
-                dirs[cwd] = list()
-    elif l[0].isdigit():
-        keys = dirs.keys()
-        dirs[cwd].append(int(l[0]))
-        for k in keys:
-            if k in cwd and cwd != k:
-                dirs[k].append(int(l[0]))
+    if cwd not in dirs.keys():
+        dirs[cwd] = list()
 
 sizes = 0
 for dir, s in dirs.items():
@@ -47,7 +40,6 @@ for d, content in dirs.items():
     if size > delete_needed:
         to_delete[d] = size
 
-
-
-print("p1", sizes)
-print("p2", min(to_delete.values()))
+print("p1", sizes, sizes == 1315285)
+mini_to_delete = min(to_delete.values())
+print("p2", mini_to_delete, mini_to_delete == 9847279)
