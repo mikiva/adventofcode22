@@ -4,8 +4,8 @@ from functools import lru_cache
 
 print("START==========")
 
-#f = f"../inputs/{os.path.split(os.getcwd())[1]}_ex.txt"
-f = "../inputs/{}_ex.txt".format(os.path.split(os.getcwd())[1])
+f = f"../inputs/{os.path.split(os.getcwd())[1]}.txt"
+#f = "../inputs/{}.txt".format(os.path.split(os.getcwd())[1])
 notes = open(f).read().split("\n\n")
 
 all_notes = [[n.strip() for n in note.split("\n")] for note in notes]
@@ -44,7 +44,7 @@ def monkey_do(monkeys, m, worried=False):
         if not worried:
             item = floor_div(item, 3)
         else:
-            ...
+            item = item % lcm
 
 
         test = m["test"]
@@ -55,8 +55,9 @@ def monkey_do(monkeys, m, worried=False):
             monkeys[int(test["falsy"])]["items"].append(item)
     m["items"] = []
 
-
+lcm = 1
 def monkeybusiness(rounds, worried=False):
+    global lcm
     monkeys = []
     for key, note in enumerate(all_notes):
         monkey = {}
@@ -73,6 +74,7 @@ def monkeybusiness(rounds, worried=False):
                               falsy=int(note[5].split()[-1]))
         monkey["inspected"] = 0
         monkeys.append(monkey)
+        lcm *= int(note[3].split()[-1])
 
     for _ in range(rounds):
         for monkey in monkeys:
